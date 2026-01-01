@@ -1,0 +1,27 @@
+name: call_plugin_example
+description: "Demonstrates how to use the call_plugin plugin."
+publish_to: 'none'
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  call_plugin:
+    path: ../
+
+  cupertino_icons: ^1.0.8
+  permission_handler: ^12.0.1
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
