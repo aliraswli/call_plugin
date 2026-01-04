@@ -17,6 +17,24 @@ class CallLogParams {
     this.answeredOnly,
   });
 
+  CallLogParams copyWith({
+    final int? page,
+    final int? perPage,
+    final List<CallLogTypeEnum>? types,
+    final List<String>? phones,
+    final String? subscriptionId,
+    final bool? answeredOnly,
+  }) {
+    return CallLogParams(
+      page: page ?? this.page,
+      perPage: perPage ?? this.perPage,
+      types: types ?? this.types,
+      phones: phones ?? this.phones,
+      subscriptionId: subscriptionId ?? this.subscriptionId,
+      answeredOnly: answeredOnly ?? this.answeredOnly,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'page': page,
