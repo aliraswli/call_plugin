@@ -1,6 +1,8 @@
+import 'package:call_plugin/models/call_log_params.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'call_plugin_method_channel.dart';
+import 'models/sim_card_model.dart';
 
 abstract class CallPluginPlatform extends PlatformInterface {
   CallPluginPlatform() : super(token: _token);
@@ -16,18 +18,11 @@ abstract class CallPluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<Map<String, dynamic>?> getCallLogs({
-    required int page,
-    required int perPage,
-    List<int>? callTypes,
-    List<String>? phoneNumbers,
-    String? subscriptionId,
-    bool? answeredOnly,
-  }) {
+  Future<Map<String, dynamic>?> getCallLogs(CallLogParams params) {
     throw UnimplementedError('getCallLogs() has not been implemented.');
   }
 
-  Future<List<Map>?> getSimCards() {
+  Future<List<SimCardModel>?> getSimCards() {
     throw UnimplementedError('getCallLogs() has not been implemented.');
   }
 }

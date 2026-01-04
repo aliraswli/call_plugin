@@ -34,8 +34,6 @@ class _MyAppState extends State<MyApp> {
       // subscriptionId: 3
       // answeredOnly: true
       // phoneNumbers: ["09388518146", "09366754028"]
-      final data = await _callPlugin.getCallLogs(page: 1, perPage: 15);
-      log(data.toString());
     } catch (e) {
       log('Failed to get platform version. ${e.toString()}');
     }
