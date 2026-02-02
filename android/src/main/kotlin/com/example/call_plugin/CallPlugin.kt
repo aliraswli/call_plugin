@@ -44,7 +44,8 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                 callTypes = args["callTypes"] as? List<Int>,
                 phoneNumbers = args["phoneNumbers"] as? List<String>,
                 subscriptionId = args["subscriptionId"] as? String,
-                answeredOnly = args["answeredOnly"] as? Boolean
+                answeredOnly = args["answeredOnly"] as? Boolean,
+                duration = args["duration"] as? Int
             )
 
             val data = callRepository.getPagedLogs(filter)
@@ -77,8 +78,7 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                         "slot" to sim.slot
 
                     )
-                }
-            )
+                })
         } catch (e: Exception) {
             result.error("SIM_CARD_ERROR", e.message, null)
         }

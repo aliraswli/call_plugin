@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:call_plugin/enums/call_log_type_enum.dart';
+import 'package:call_plugin/models/call_log_params.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -34,6 +36,14 @@ class _MyAppState extends State<MyApp> {
       // subscriptionId: 3
       // answeredOnly: true
       // phoneNumbers: ["09388518146", "09366754028"]
+      final data = await _callPlugin.getCallLogs(
+        params: CallLogParams(
+          page: 1,
+          duration: 0,
+          types: [CallLogTypeEnum.outgoing],
+        ),
+      );
+      log(data.toString());
     } catch (e) {
       log('Failed to get platform version. ${e.toString()}');
     }

@@ -35,6 +35,11 @@ class CallLogRepository(
             selectionArgs.add(it)
         }
 
+        filter.duration?.let {
+            selectionParts.add("${CallLog.Calls.DURATION} = ?");
+            selectionArgs.add(it.toString())
+        }
+
         if (filter.answeredOnly == true) {
             selectionParts.add("${CallLog.Calls.DURATION} > 0")
         }

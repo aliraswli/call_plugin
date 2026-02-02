@@ -13,5 +13,6 @@ data class CallLogFilter(
     val callTypes: List<Int>? = null,
     val phoneNumbers: List<String>? = null,
     val subscriptionId: String? = null,
-    val answeredOnly: Boolean? = null
+    val answeredOnly: Boolean? = null,
+    val duration: Int? = null
 )

@@ -7,6 +7,7 @@ class CallLogParams {
   final List<String>? phones;
   final String? subscriptionId;
   final bool? answeredOnly;
+  final int? duration;
 
   const CallLogParams({
     required this.page,
@@ -15,6 +16,7 @@ class CallLogParams {
     this.phones,
     this.subscriptionId,
     this.answeredOnly,
+    this.duration,
   });
 
   CallLogParams copyWith({
@@ -24,6 +26,7 @@ class CallLogParams {
     final List<String>? phones,
     final String? subscriptionId,
     final bool? answeredOnly,
+    final int? duration,
   }) {
     return CallLogParams(
       page: page ?? this.page,
@@ -32,6 +35,7 @@ class CallLogParams {
       phones: phones ?? this.phones,
       subscriptionId: subscriptionId ?? this.subscriptionId,
       answeredOnly: answeredOnly ?? this.answeredOnly,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -43,6 +47,7 @@ class CallLogParams {
       'phoneNumbers': phones,
       'subscriptionId': subscriptionId,
       'answeredOnly': answeredOnly,
+      'duration': duration,
     };
   }
 }
