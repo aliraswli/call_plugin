@@ -1,15 +1,15 @@
 import 'package:call_plugin/enums/call_log_type_enum.dart';
 
 class CallLogParams {
-  final int page;
-  final int perPage;
-  final List<CallLogTypeEnum>? types;
-  final List<String>? phones;
-  final String? subscriptionId;
-  final bool? answeredOnly;
-  final int? duration;
+  int page;
+  int perPage;
+  List<CallLogTypeEnum>? types;
+  List<String>? phones;
+  String? subscriptionId;
+  bool? answeredOnly;
+  int? duration;
 
-  const CallLogParams({
+  CallLogParams({
     required this.page,
     this.perPage = 15,
     this.types,
@@ -20,13 +20,13 @@ class CallLogParams {
   });
 
   CallLogParams copyWith({
-    final int? page,
-    final int? perPage,
-    final List<CallLogTypeEnum>? types,
-    final List<String>? phones,
-    final String? subscriptionId,
-    final bool? answeredOnly,
-    final int? duration,
+    int? page,
+    int? perPage,
+    List<CallLogTypeEnum>? types,
+    List<String>? phones,
+    String? subscriptionId,
+    bool? answeredOnly,
+    int? duration,
   }) {
     return CallLogParams(
       page: page ?? this.page,
