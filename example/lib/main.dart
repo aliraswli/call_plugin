@@ -37,11 +37,7 @@ class _MyAppState extends State<MyApp> {
       // answeredOnly: true
       // phoneNumbers: ["09388518146", "09366754028"]
       final data = await _callPlugin.getCallLogs(
-        params: CallLogParams(
-          page: 1,
-          duration: 0,
-          types: [CallLogTypeEnum.outgoing],
-        ),
+        params: CallLogParams(page: 1, perPage: 100),
       );
       log(data.toString());
     } catch (e) {

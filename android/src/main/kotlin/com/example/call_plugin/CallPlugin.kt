@@ -44,7 +44,8 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                 callTypes = args["callTypes"] as? List<Int>,
                 phoneNumbers = args["phoneNumbers"] as? List<String>,
                 subscriptionId = args["subscriptionId"] as? String,
-                answeredOnly = args["answeredOnly"] as? Boolean,
+                isAnswered = args["isAnswered"] as? Boolean,
+                isUnknown = args["isUnknown"] as? Boolean,
                 duration = args["duration"] as? Int
             )
 

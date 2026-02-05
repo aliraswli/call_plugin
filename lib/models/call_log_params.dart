@@ -6,7 +6,8 @@ class CallLogParams {
   List<CallLogTypeEnum>? types;
   List<String>? phones;
   String? subscriptionId;
-  bool? answeredOnly;
+  bool? isAnswered;
+  bool? isUnknown;
   int? duration;
 
   CallLogParams({
@@ -15,7 +16,8 @@ class CallLogParams {
     this.types,
     this.phones,
     this.subscriptionId,
-    this.answeredOnly,
+    this.isAnswered,
+    this.isUnknown,
     this.duration,
   });
 
@@ -25,7 +27,8 @@ class CallLogParams {
     List<CallLogTypeEnum>? types,
     List<String>? phones,
     String? subscriptionId,
-    bool? answeredOnly,
+    bool? isAnswered,
+    bool? isUnknown,
     int? duration,
   }) {
     return CallLogParams(
@@ -34,7 +37,8 @@ class CallLogParams {
       types: types ?? this.types,
       phones: phones ?? this.phones,
       subscriptionId: subscriptionId ?? this.subscriptionId,
-      answeredOnly: answeredOnly ?? this.answeredOnly,
+      isAnswered: isAnswered ?? this.isAnswered,
+      isUnknown: isUnknown ?? this.isUnknown,
       duration: duration ?? this.duration,
     );
   }
@@ -46,7 +50,8 @@ class CallLogParams {
       'callTypes': types?.map((e) => e.type).toList(),
       'phoneNumbers': phones,
       'subscriptionId': subscriptionId,
-      'answeredOnly': answeredOnly,
+      'isAnswered': isAnswered,
+      'isUnknown': isUnknown,
       'duration': duration,
     };
   }

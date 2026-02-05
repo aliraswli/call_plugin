@@ -5,6 +5,7 @@ class CallLogModel {
     this.id,
     this.number,
     this.name,
+    this.photo,
     this.type,
     this.date,
     this.duration,
@@ -16,6 +17,7 @@ class CallLogModel {
       id: json['id'],
       number: json['number'],
       name: json['name'],
+      photo: json['photo'],
       type: CallLogTypeEnum.fromValue(json['type'] ?? 0),
       date: json['date'],
       duration: json['duration'],
@@ -26,6 +28,7 @@ class CallLogModel {
   final String? id;
   final String? number;
   final String? name;
+  final String? photo;
   final CallLogTypeEnum? type;
   final num? date;
   final num? duration;
@@ -35,6 +38,7 @@ class CallLogModel {
     String? id,
     String? number,
     String? name,
+    String? photo,
     CallLogTypeEnum? type,
     num? date,
     num? duration,
@@ -43,6 +47,7 @@ class CallLogModel {
     id: id ?? this.id,
     number: number ?? this.number,
     name: name ?? this.name,
+    photo: photo ?? this.photo,
     type: type ?? this.type,
     date: date ?? this.date,
     duration: duration ?? this.duration,
@@ -54,6 +59,7 @@ class CallLogModel {
     map['id'] = id;
     map['number'] = number;
     map['name'] = name;
+    map['photo'] = photo;
     map['type'] = type;
     map['date'] = date;
     map['duration'] = duration;

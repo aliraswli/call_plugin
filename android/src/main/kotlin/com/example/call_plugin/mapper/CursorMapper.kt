@@ -22,6 +22,7 @@ object CursorMapper {
                             id = it.getString(it.getColumnIndexOrThrow(CallLog.Calls._ID)),
                             number = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.NUMBER)),
                             name = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME)),
+                            photo = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_PHOTO_URI)),
                             type = it.getInt(it.getColumnIndexOrThrow(CallLog.Calls.TYPE)),
                             date = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DATE)),
                             duration = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DURATION)),

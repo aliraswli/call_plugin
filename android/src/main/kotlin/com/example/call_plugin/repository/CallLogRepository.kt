@@ -35,13 +35,27 @@ class CallLogRepository(
             selectionArgs.add(it)
         }
 
+        filter.isUnknown?.let { isUnknown ->
+            if (isUnknown) {
+                selectionParts.add(
+                    "(${CallLog.Calls.CACHED_NAME} IS NULL OR ${CallLog.Calls.CACHED_NAME} = '')"
+                )
+            } else {
+                selectionParts.add(
+                    "(${CallLog.Calls.CACHED_NAME} IS NOT NULL AND ${CallLog.Calls.CACHED_NAME} != '')"
+                )
+            }
+        }
+
         filter.duration?.let {
             selectionParts.add("${CallLog.Calls.DURATION} = ?");
             selectionArgs.add(it.toString())
         }
 
-        if (filter.answeredOnly == true) {
+        if (filter.isAnswered == true) {
             selectionParts.add("${CallLog.Calls.DURATION} > 0")
+        } else if (filter.isAnswered == false) {
+            selectionParts.add("${CallLog.Calls.DURATION} = 0")
         }
 
         val selection = if (selectionParts.isNotEmpty())
