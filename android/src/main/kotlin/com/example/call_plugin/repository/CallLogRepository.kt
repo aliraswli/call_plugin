@@ -83,7 +83,7 @@ class CallLogRepository(
         )
 
         val offset = (filter.page - 1) * filter.perPage
-        val items = CursorMapper.map(cursor, offset, filter.perPage)
+        val items = CursorMapper.map(context, cursor, offset, filter.perPage)
 
         return CallLogResult(
             items = items,
