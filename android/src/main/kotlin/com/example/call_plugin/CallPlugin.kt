@@ -29,8 +29,46 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getCallLogs" -> handleGetCallLogs(call, result)
+            "deleteCallLogById" -> handleDeleteCallLogById(call, result)
+            "handleDeleteCallLogByPhone" -> handleDeleteCallLogByPhone(call, result)
             "getSimCards" -> handleGetSimCards(result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun handleDeleteCallLogById(call: MethodCall, result: MethodChannel.Result) {
+        try {
+            val callLogId = call.arguments as String?
+            if (callLogId == null) {
+                result.error("DELETE_CALL_LOG_BY_ID_ERROR", "callLogId cant be null.", null)
+                return
+            }
+            val data = callRepository.deleteCallLogById(callLogId)
+            if (data == 1) {
+                result.success(true)
+            } else {
+                result.success(false)
+            }
+        } catch (e: Exception) {
+            result.error("DELETE_CALL_LOG_BY_ID_ERROR", e.message, null)
+        }
+    }
+
+    private fun handleDeleteCallLogByPhone(call: MethodCall, result: MethodChannel.Result) {
+        try {
+            val phoneNumber = call.arguments as String?
+            if (phoneNumber == null) {
+                result.error("DELETE_CALL_LOG_BY_PHONE_ERROR", "number cant be null.", null)
+                return
+            }
+            val data = callRepository.deleteCallLogByPhone(phoneNumber)
+            if (data == 1) {
+                result.success(true)
+            } else {
+                result.success(false)
+            }
+        } catch (e: Exception) {
+            result.error("DELETE_CALL_LOG_BY_PHONE_ERROR", e.message, null)
         }
     }
 

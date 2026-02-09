@@ -11,4 +11,12 @@ class CallPlugin {
   Future<List<SimCardModel>?> getSimCards() {
     return CallPluginPlatform.instance.getSimCards();
   }
+
+  Future<bool> deleteCallLogById(String callLogId) {
+    return CallPluginPlatform.instance.deleteCallLogById(callLogId);
+  }
+
+  Future<bool> deleteCallLogByPhone(String phoneNumber) {
+    return CallPluginPlatform.instance.deleteCallLogByPhone(phoneNumber);
+  }
 }

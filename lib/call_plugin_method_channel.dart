@@ -38,4 +38,32 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
       return null;
     }
   }
+
+  @override
+  Future<bool> deleteCallLogById(String callLogId) async {
+    try {
+      final result = await methodChannel.invokeMethod(
+        "deleteCallLogById",
+        callLogId,
+      );
+      return result == true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> deleteCallLogByPhone(String phoneNumber) async {
+    try {
+      final result = await methodChannel.invokeMethod(
+        "deleteCallLogByPhone",
+        phoneNumber,
+      );
+      return result == true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
 }

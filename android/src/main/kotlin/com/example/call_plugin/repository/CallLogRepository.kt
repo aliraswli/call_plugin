@@ -2,6 +2,7 @@ package com.example.call_plugin.repository
 
 import android.content.Context
 import android.provider.CallLog
+import android.util.Log
 import com.example.call_plugin.mapper.CursorMapper
 import com.example.call_plugin.model.CallLogFilter
 import com.example.call_plugin.model.CallLogResult
@@ -10,6 +11,30 @@ import kotlin.math.ceil
 class CallLogRepository(
     private val context: Context,
 ) {
+    fun deleteCallLogById(id: String): Int {
+        try {
+            return context.contentResolver.delete(
+                CallLog.Calls.CONTENT_URI, CallLog.Calls._ID + " = ? ",
+                arrayOf(id)
+            )
+        } catch (e: SecurityException) {
+            Log.e("CallLog", "Not allowed to delete call log", e)
+            return -1;
+        }
+    }
+
+    fun deleteCallLogByPhone(number: String): Int {
+        try {
+            return context.contentResolver.delete(
+                CallLog.Calls.CONTENT_URI, CallLog.Calls.NUMBER + " = ? ",
+                arrayOf(number)
+            )
+        } catch (e: SecurityException) {
+            Log.e("CallLog", "Not allowed to delete call log", e)
+            return -1;
+        }
+    }
+
     fun getPagedLogs(filter: CallLogFilter): CallLogResult {
         val selectionParts = mutableListOf<String>()
         val selectionArgs = mutableListOf<String>()

@@ -25,4 +25,14 @@ abstract class CallPluginPlatform extends PlatformInterface {
   Future<List<SimCardModel>?> getSimCards() {
     throw UnimplementedError('getCallLogs() has not been implemented.');
   }
+
+  Future<bool> deleteCallLogById(String callLogId) {
+    throw UnimplementedError('deleteCallLogById() has not been implemented.');
+  }
+
+  Future<bool> deleteCallLogByPhone(String phoneNumber) {
+    throw UnimplementedError(
+      'deleteCallLogByPhone() has not been implemented.',
+    );
+  }
 }
