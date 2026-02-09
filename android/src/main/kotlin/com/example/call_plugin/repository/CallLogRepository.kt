@@ -2,6 +2,7 @@ package com.example.call_plugin.repository
 
 import android.content.Context
 import android.provider.CallLog
+import android.telephony.PhoneNumberUtils
 import android.util.Log
 import com.example.call_plugin.mapper.CursorMapper
 import com.example.call_plugin.model.CallLogFilter
@@ -24,14 +25,17 @@ class CallLogRepository(
     }
 
     fun deleteCallLogByPhone(number: String): Int {
-        try {
-            return context.contentResolver.delete(
-                CallLog.Calls.CONTENT_URI, CallLog.Calls.NUMBER + " = ? ",
-                arrayOf(number)
+        val normalized = PhoneNumberUtils.normalizeNumber(number)
+
+        return try {
+            context.contentResolver.delete(
+                CallLog.Calls.CONTENT_URI,
+                "${CallLog.Calls.NUMBER} = ?",
+                arrayOf(normalized)
             )
         } catch (e: SecurityException) {
             Log.e("CallLog", "Not allowed to delete call log", e)
-            return -1;
+            -1
         }
     }
 

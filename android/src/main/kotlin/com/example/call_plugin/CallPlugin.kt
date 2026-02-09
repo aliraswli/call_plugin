@@ -62,10 +62,11 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                 return
             }
             val data = callRepository.deleteCallLogByPhone(phoneNumber)
+
             if (data == 1) {
                 result.success(true)
             } else {
-                result.success(false)
+                result.error("DELETE_CALL_LOG_BY_PHONE_ERROR . $data", e.message, null)
             }
         } catch (e: Exception) {
             result.error("DELETE_CALL_LOG_BY_PHONE_ERROR", e.message, null)

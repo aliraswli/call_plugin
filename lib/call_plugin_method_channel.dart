@@ -60,6 +60,7 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
         "deleteCallLogByPhone",
         phoneNumber,
       );
+      log("deleteCallLogByPhone: ** / $result");
       return result == true;
     } catch (e) {
       log(e.toString());
