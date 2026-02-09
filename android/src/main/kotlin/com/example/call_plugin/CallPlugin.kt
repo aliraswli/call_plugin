@@ -30,7 +30,7 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
         when (call.method) {
             "getCallLogs" -> handleGetCallLogs(call, result)
             "deleteCallLogById" -> handleDeleteCallLogById(call, result)
-            "handleDeleteCallLogByPhone" -> handleDeleteCallLogByPhone(call, result)
+            "deleteCallLogByPhone" -> handleDeleteCallLogByPhone(call, result)
             "getSimCards" -> handleGetSimCards(result)
             else -> result.notImplemented()
         }
