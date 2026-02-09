@@ -66,7 +66,7 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
             if (data == 1) {
                 result.success(true)
             } else {
-                result.error("DELETE_CALL_LOG_BY_PHONE_ERROR . $data", e.message, null)
+                result.error("DELETE_CALL_LOG_BY_PHONE_ERROR . $data", "$data = 55555555555", null)
             }
         } catch (e: Exception) {
             result.error("DELETE_CALL_LOG_BY_PHONE_ERROR", e.message, null)
