@@ -46,7 +46,8 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
         "deleteCallLogById",
         callLogId,
       );
-      return result == true;
+      log("deleteCallLogById: ** / $result");
+      return result != -1;
     } catch (e) {
       log(e.toString());
       return false;
@@ -61,7 +62,7 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
         phoneNumber,
       );
       log("deleteCallLogByPhone: ** / $result");
-      return result == true;
+      return result != -1;
     } catch (e) {
       log(e.toString());
       return false;

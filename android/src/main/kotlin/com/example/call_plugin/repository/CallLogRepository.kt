@@ -2,7 +2,6 @@ package com.example.call_plugin.repository
 
 import android.content.Context
 import android.provider.CallLog
-import android.telephony.PhoneNumberUtils
 import android.util.Log
 import com.example.call_plugin.mapper.CursorMapper
 import com.example.call_plugin.model.CallLogFilter
@@ -15,8 +14,7 @@ class CallLogRepository(
     fun deleteCallLogById(id: String): Int {
         try {
             return context.contentResolver.delete(
-                CallLog.Calls.CONTENT_URI, CallLog.Calls._ID + " = ? ",
-                arrayOf(id)
+                CallLog.Calls.CONTENT_URI, CallLog.Calls._ID + " = ? ", arrayOf(id)
             )
         } catch (e: SecurityException) {
             Log.e("CallLog", "Not allowed to delete call log", e)
@@ -25,17 +23,16 @@ class CallLogRepository(
     }
 
     fun deleteCallLogByPhone(number: String): Int {
-        val normalized = PhoneNumberUtils.normalizeNumber(number)
-
-        return try {
-            context.contentResolver.delete(
+        val normalized = number.replace(" ", "")
+        try {
+            return context.contentResolver.delete(
                 CallLog.Calls.CONTENT_URI,
-                "${CallLog.Calls.NUMBER} = ?",
-                arrayOf(normalized)
+                "REPLACE(${CallLog.Calls.NUMBER}, ' ', '') LIKE ?",
+                arrayOf("%$normalized%")
             )
         } catch (e: SecurityException) {
-            Log.e("CallLog", "Not allowed to delete call log", e)
-            -1
+            Log.e("CallLog", "Not allowed to delete call logs", e)
+            return -1
         }
     }
 
@@ -87,11 +84,10 @@ class CallLogRepository(
             selectionParts.add("${CallLog.Calls.DURATION} = 0")
         }
 
-        val selection = if (selectionParts.isNotEmpty())
-            selectionParts.joinToString(" AND ") else null
+        val selection =
+            if (selectionParts.isNotEmpty()) selectionParts.joinToString(" AND ") else null
 
-        val args = if (selectionArgs.isNotEmpty())
-            selectionArgs.toTypedArray() else null
+        val args = if (selectionArgs.isNotEmpty()) selectionArgs.toTypedArray() else null
 
         val totalCount = getTotalCount(selection, args)
         val totalPage = if (totalCount == 0) 0
@@ -99,16 +95,12 @@ class CallLogRepository(
 
         val limit = filter.page * filter.perPage
 
-        val uri = CallLog.Calls.CONTENT_URI.buildUpon()
-            .appendQueryParameter("limit", limit.toString())
-            .build()
+        val uri =
+            CallLog.Calls.CONTENT_URI.buildUpon().appendQueryParameter("limit", limit.toString())
+                .build()
 
         val cursor = context.contentResolver.query(
-            uri,
-            null,
-            selection,
-            args,
-            "${CallLog.Calls.DATE} DESC"
+            uri, null, selection, args, "${CallLog.Calls.DATE} DESC"
         )
 
         val offset = (filter.page - 1) * filter.perPage
@@ -124,11 +116,7 @@ class CallLogRepository(
 
     private fun getTotalCount(selection: String?, args: Array<String>?): Int {
         context.contentResolver.query(
-            CallLog.Calls.CONTENT_URI,
-            arrayOf(CallLog.Calls._ID),
-            selection,
-            args,
-            null
+            CallLog.Calls.CONTENT_URI, arrayOf(CallLog.Calls._ID), selection, args, null
         )?.use { return it.count }
 
         return 0

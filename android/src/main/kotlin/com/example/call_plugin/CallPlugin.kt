@@ -44,11 +44,7 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                 return
             }
             val data = callRepository.deleteCallLogById(callLogId)
-            if (data == -1) {
-                result.success(false)
-            } else {
-                result.success(true)
-            }
+            result.success(data)
         } catch (e: Exception) {
             result.error("DELETE_CALL_LOG_BY_ID_ERROR", e.message, null)
         }
@@ -62,12 +58,7 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
                 return
             }
             val data = callRepository.deleteCallLogByPhone(phoneNumber)
-
-            if (data == -1) {
-                result.error("DELETE_CALL_LOG_BY_PHONE_ERROR . $data", "$data = 55555555555", null)
-            } else {
-                result.success(true)
-            }
+            result.success(data)
         } catch (e: Exception) {
             result.error("DELETE_CALL_LOG_BY_PHONE_ERROR", e.message, null)
         }
