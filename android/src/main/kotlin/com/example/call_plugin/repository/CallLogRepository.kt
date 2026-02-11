@@ -30,11 +30,25 @@ class CallLogRepository(
 
             val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
 
-            val international = when {
-                digitsOnly.startsWith("0") -> "98" + digitsOnly.substring(1)
-                digitsOnly.startsWith("98") -> digitsOnly
-                else -> digitsOnly
+            val local: String
+            val international: String
+
+            when {
+                digitsOnly.startsWith("0") -> {
+                    local = digitsOnly
+                    international = "98" + digitsOnly.substring(1)
+                }
+                digitsOnly.startsWith("98") -> {
+                    international = digitsOnly
+                    local = "0" + digitsOnly.substring(2)
+                }
+                else -> {
+                    local = digitsOnly
+                    international = digitsOnly
+                }
             }
+
+            val plusInternational = "+$international"
 
             val projection = arrayOf(
                 CallLog.Calls._ID,
@@ -48,9 +62,9 @@ class CallLogRepository(
         """.trimIndent()
 
             val selectionArgs = arrayOf(
-                "%$digitsOnly%",
+                "%$local%",
                 "%$international%",
-                "%+$international%"
+                "%$plusInternational%"
             )
 
             val idsToDelete = mutableListOf<String>()
@@ -92,6 +106,74 @@ class CallLogRepository(
             Log.e("CallLog", "deleteCallLogByPhone failed", e)
             -1
         }
+//        return try {
+//            val resolver = context.contentResolver
+//            var deletedCount = 0
+//
+//            val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
+//
+//            val international = when {
+//                digitsOnly.startsWith("0") -> "98" + digitsOnly.substring(1)
+//                digitsOnly.startsWith("98") -> digitsOnly
+//                else -> digitsOnly
+//            }
+//
+//            val projection = arrayOf(
+//                CallLog.Calls._ID,
+//                CallLog.Calls.NUMBER
+//            )
+//
+//            val selection = """
+//            ${CallLog.Calls.NUMBER} LIKE ? OR
+//            ${CallLog.Calls.NUMBER} LIKE ? OR
+//            ${CallLog.Calls.NUMBER} LIKE ?
+//        """.trimIndent()
+//
+//            val selectionArgs = arrayOf(
+//                "%$digitsOnly%",
+//                "%$international%",
+//                "%+$international%"
+//            )
+//
+//            val idsToDelete = mutableListOf<String>()
+//
+//            val cursor = resolver.query(
+//                CallLog.Calls.CONTENT_URI,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null
+//            )
+//
+//            cursor?.use {
+//                val idIndex = it.getColumnIndex(CallLog.Calls._ID)
+//                val numberIndex = it.getColumnIndex(CallLog.Calls.NUMBER)
+//
+//                while (it.moveToNext()) {
+//                    val id = it.getString(idIndex)
+//                    val number = it.getString(numberIndex)
+//
+//                    if (PhoneNumberUtils.compare(number, targetNumber)) {
+//                        idsToDelete.add(id)
+//                    }
+//                }
+//            }
+//
+//            if (idsToDelete.isNotEmpty()) {
+//                val placeholders = idsToDelete.joinToString(",") { "?" }
+//
+//                deletedCount = resolver.delete(
+//                    CallLog.Calls.CONTENT_URI,
+//                    "${CallLog.Calls._ID} IN ($placeholders)",
+//                    idsToDelete.toTypedArray()
+//                )
+//            }
+//
+//            deletedCount
+//        } catch (e: Exception) {
+//            Log.e("CallLog", "deleteCallLogByPhone failed", e)
+//            -1
+//        }
 //        try {
 //            val resolver = context.contentResolver
 //            var deletedCount = 0

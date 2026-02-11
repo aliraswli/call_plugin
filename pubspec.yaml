@@ -1,6 +1,6 @@
 name: call_plugin
 description: "A new Flutter plugin project."
-version: 0.4.16
+version: 0.4.17
 
 environment:
   sdk: ^3.10.1
