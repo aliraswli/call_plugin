@@ -24,19 +24,34 @@ class CallLogRepository(
     }
 
     fun deleteCallLogByPhone(targetNumber: String): Int {
-        try {
+        return try {
             val resolver = context.contentResolver
             var deletedCount = 0
 
             val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
+
+            val international = when {
+                digitsOnly.startsWith("0") -> "98" + digitsOnly.substring(1)
+                digitsOnly.startsWith("98") -> digitsOnly
+                else -> digitsOnly
+            }
 
             val projection = arrayOf(
                 CallLog.Calls._ID,
                 CallLog.Calls.NUMBER
             )
 
-            val selection = "${CallLog.Calls.NUMBER} LIKE ?"
-            val selectionArgs = arrayOf("%$digitsOnly%")
+            val selection = """
+            ${CallLog.Calls.NUMBER} LIKE ? OR
+            ${CallLog.Calls.NUMBER} LIKE ? OR
+            ${CallLog.Calls.NUMBER} LIKE ?
+        """.trimIndent()
+
+            val selectionArgs = arrayOf(
+                "%$digitsOnly%",
+                "%$international%",
+                "%+$international%"
+            )
 
             val idsToDelete = mutableListOf<String>()
 
@@ -63,7 +78,6 @@ class CallLogRepository(
             }
 
             if (idsToDelete.isNotEmpty()) {
-
                 val placeholders = idsToDelete.joinToString(",") { "?" }
 
                 deletedCount = resolver.delete(
@@ -73,11 +87,65 @@ class CallLogRepository(
                 )
             }
 
-            return deletedCount
+            deletedCount
         } catch (e: Exception) {
-            Log.e("CallLog, deleteCallLogByPhone", "Not allowed to delete call log", e)
-            return -1
+            Log.e("CallLog", "deleteCallLogByPhone failed", e)
+            -1
         }
+//        try {
+//            val resolver = context.contentResolver
+//            var deletedCount = 0
+//
+//            val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
+//
+//            val projection = arrayOf(
+//                CallLog.Calls._ID,
+//                CallLog.Calls.NUMBER
+//            )
+//
+//            val selection = "${CallLog.Calls.NUMBER} LIKE ?"
+//            val selectionArgs = arrayOf("%$digitsOnly%")
+//
+//            val idsToDelete = mutableListOf<String>()
+//
+//            val cursor = resolver.query(
+//                CallLog.Calls.CONTENT_URI,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null
+//            )
+//
+//            cursor?.use {
+//                val idIndex = it.getColumnIndex(CallLog.Calls._ID)
+//                val numberIndex = it.getColumnIndex(CallLog.Calls.NUMBER)
+//
+//                while (it.moveToNext()) {
+//                    val id = it.getString(idIndex)
+//                    val number = it.getString(numberIndex)
+//
+//                    if (PhoneNumberUtils.compare(number, targetNumber)) {
+//                        idsToDelete.add(id)
+//                    }
+//                }
+//            }
+//
+//            if (idsToDelete.isNotEmpty()) {
+//
+//                val placeholders = idsToDelete.joinToString(",") { "?" }
+//
+//                deletedCount = resolver.delete(
+//                    CallLog.Calls.CONTENT_URI,
+//                    "${CallLog.Calls._ID} IN ($placeholders)",
+//                    idsToDelete.toTypedArray()
+//                )
+//            }
+//
+//            return deletedCount
+//        } catch (e: Exception) {
+//            Log.e("CallLog, deleteCallLogByPhone", "Not allowed to delete call log", e)
+//            return -1
+//        }
     }
 
     fun getPagedLogs(filter: CallLogFilter): CallLogResult {
