@@ -62,7 +62,9 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
         phoneNumber,
       );
       log("deleteCallLogByPhone: ** / $result");
-      return result != -1;
+      // 0 or zero its mean no call logs to delete.
+      // -1 its mean cant delete call logs or has error.
+      return result != 0 && result != -1;
     } catch (e) {
       log(e.toString());
       return false;
