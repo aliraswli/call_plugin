@@ -25,8 +25,8 @@ class CallLogRepository(
 
     fun deleteCallLogByPhone(targetNumber: String): Int {
         try {
-            var deletedCount = 0
             val resolver = context.contentResolver
+            var deletedCount = 0
 
             val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
 
@@ -37,6 +37,8 @@ class CallLogRepository(
 
             val selection = "${CallLog.Calls.NUMBER} LIKE ?"
             val selectionArgs = arrayOf("%$digitsOnly%")
+
+            val idsToDelete = mutableListOf<String>()
 
             val cursor = resolver.query(
                 CallLog.Calls.CONTENT_URI,
@@ -55,17 +57,64 @@ class CallLogRepository(
                     val number = it.getString(numberIndex)
 
                     if (PhoneNumberUtils.compare(number, targetNumber)) {
-                        val rows = resolver.delete(
-                            CallLog.Calls.CONTENT_URI,
-                            "${CallLog.Calls._ID} = ?",
-                            arrayOf(id)
-                        )
-                        deletedCount += rows
+                        idsToDelete.add(id)
                     }
                 }
             }
 
+            if (idsToDelete.isNotEmpty()) {
+
+                val placeholders = idsToDelete.joinToString(",") { "?" }
+
+                deletedCount = resolver.delete(
+                    CallLog.Calls.CONTENT_URI,
+                    "${CallLog.Calls._ID} IN ($placeholders)",
+                    idsToDelete.toTypedArray()
+                )
+            }
+
             return deletedCount
+//            var deletedCount = 0
+//            val resolver = context.contentResolver
+//
+//            val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
+//
+//            val projection = arrayOf(
+//                CallLog.Calls._ID,
+//                CallLog.Calls.NUMBER
+//            )
+//
+//            val selection = "${CallLog.Calls.NUMBER} LIKE ?"
+//            val selectionArgs = arrayOf("%$digitsOnly%")
+//
+//            val cursor = resolver.query(
+//                CallLog.Calls.CONTENT_URI,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null
+//            )
+//
+//            cursor?.use {
+//                val idIndex = it.getColumnIndex(CallLog.Calls._ID)
+//                val numberIndex = it.getColumnIndex(CallLog.Calls.NUMBER)
+//
+//                while (it.moveToNext()) {
+//                    val id = it.getString(idIndex)
+//                    val number = it.getString(numberIndex)
+//
+//                    if (PhoneNumberUtils.compare(number, targetNumber)) {
+//                        val rows = resolver.delete(
+//                            CallLog.Calls.CONTENT_URI,
+//                            "${CallLog.Calls._ID} = ?",
+//                            arrayOf(id)
+//                        )
+//                        deletedCount += rows
+//                    }
+//                }
+//            }
+//
+//            return deletedCount
         } catch (e: Exception) {
             return -1
         }
