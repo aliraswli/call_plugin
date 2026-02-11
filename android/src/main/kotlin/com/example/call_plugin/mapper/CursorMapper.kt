@@ -33,7 +33,7 @@ object CursorMapper {
                             type = it.getInt(it.getColumnIndexOrThrow(CallLog.Calls.TYPE)),
                             date = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DATE)),
                             duration = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DURATION)),
-                            subscriptionId = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.PHONE_ACCOUNT_ID)),
+                            subscriptionId = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.PHONE_ACCOUNT_COMPONENT_NAME)),
                         )
                     )
                 }
