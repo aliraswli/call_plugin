@@ -18,7 +18,7 @@ class CallLogRepository(
                 CallLog.Calls.CONTENT_URI, CallLog.Calls._ID + " = ? ", arrayOf(id)
             )
         } catch (e: Exception) {
-            Log.e("CallLog", "Not allowed to delete call log", e)
+            Log.e("CallLog, deleteCallLogById", "Not allowed to delete call log", e)
             return -1;
         }
     }
@@ -74,60 +74,10 @@ class CallLogRepository(
             }
 
             return deletedCount
-//            var deletedCount = 0
-//            val resolver = context.contentResolver
-//
-//            val digitsOnly = targetNumber.replace(Regex("[^0-9]"), "")
-//
-//            val projection = arrayOf(
-//                CallLog.Calls._ID,
-//                CallLog.Calls.NUMBER
-//            )
-//
-//            val selection = "${CallLog.Calls.NUMBER} LIKE ?"
-//            val selectionArgs = arrayOf("%$digitsOnly%")
-//
-//            val cursor = resolver.query(
-//                CallLog.Calls.CONTENT_URI,
-//                projection,
-//                selection,
-//                selectionArgs,
-//                null
-//            )
-//
-//            cursor?.use {
-//                val idIndex = it.getColumnIndex(CallLog.Calls._ID)
-//                val numberIndex = it.getColumnIndex(CallLog.Calls.NUMBER)
-//
-//                while (it.moveToNext()) {
-//                    val id = it.getString(idIndex)
-//                    val number = it.getString(numberIndex)
-//
-//                    if (PhoneNumberUtils.compare(number, targetNumber)) {
-//                        val rows = resolver.delete(
-//                            CallLog.Calls.CONTENT_URI,
-//                            "${CallLog.Calls._ID} = ?",
-//                            arrayOf(id)
-//                        )
-//                        deletedCount += rows
-//                    }
-//                }
-//            }
-//
-//            return deletedCount
         } catch (e: Exception) {
+            Log.e("CallLog, deleteCallLogByPhone", "Not allowed to delete call log", e)
             return -1
         }
-    }
-
-    private fun normalizePhone(number: String): String {
-        return number
-            .replace(" ", "")
-            .replace("-", "")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("+98", "0")
-            .replace("0098", "0")
     }
 
     fun getPagedLogs(filter: CallLogFilter): CallLogResult {

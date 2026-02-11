@@ -12,7 +12,7 @@ class CallLogParams {
 
   CallLogParams({
     required this.page,
-    this.perPage = 15,
+    this.perPage = 350,
     this.types,
     this.phones,
     this.subscriptionId,
