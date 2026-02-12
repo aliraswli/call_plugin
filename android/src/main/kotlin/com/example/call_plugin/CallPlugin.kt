@@ -27,7 +27,9 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
         callRepository = CallLogRepository(context)
 
         val contactDataSource = ContactDataSource(context.contentResolver)
-        contactRepository = ContactRepository(contactDataSource)
+        contactRepository = ContactRepository(
+            context, contactDataSource
+        )
 
         channel = MethodChannel(binding.binaryMessenger, "call_plugin")
         channel.setMethodCallHandler(this)
@@ -41,7 +43,26 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
             "getSimCards" -> handleGetSimCards(result)
             "getContactById" -> handleGetContactById(call, result)
             "getContactIdByPhone" -> handleGetContactIdByPhone(call, result)
+            "openContactById" -> handleOpenContactById(call, result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun handleOpenContactById(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
+        try {
+            val args = call.arguments as? Map<*, *>
+            val contactId = args?.get("id") as? String
+            if (contactId.isNullOrBlank()) {
+                result.error("OPEN_CONTACT_ERROR", "contactId cannot be null or empty", null)
+                return
+            }
+            val success = contactRepository.openContactById(contactId)
+            result.success(success)
+        } catch (e: Exception) {
+            result.error("OPEN_CONTACT_ERROR", e.message, null)
         }
     }
 

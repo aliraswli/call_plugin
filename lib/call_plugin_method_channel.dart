@@ -99,4 +99,12 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
       return null;
     }
   }
+
+  @override
+  Future<bool> openContactById(String id) async {
+    final result = await methodChannel.invokeMethod<bool>('openContactById', {
+      'id': id,
+    });
+    return result ?? false;
+  }
 }

@@ -28,4 +28,8 @@ class CallPlugin {
   Future<ContactModel?> getContactById(String id) {
     return CallPluginPlatform.instance.getContactById(id);
   }
+
+  Future<bool> openContactById(String id) {
+    return CallPluginPlatform.instance.openContactById(id);
+  }
 }

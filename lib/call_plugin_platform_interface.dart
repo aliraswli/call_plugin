@@ -44,4 +44,8 @@ abstract class CallPluginPlatform extends PlatformInterface {
   Future<ContactModel?> getContactById(String id) {
     throw UnimplementedError('getContactById() has not been implemented.');
   }
+
+  Future<bool> openContactById(String id) {
+    throw UnimplementedError('openContactById() has not been implemented.');
+  }
 }
