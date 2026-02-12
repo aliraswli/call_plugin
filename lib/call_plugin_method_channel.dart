@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'call_plugin_platform_interface.dart';
+import 'models/contact_model.dart';
 import 'models/sim_card_model.dart';
 
 class MethodChannelCallPlugin extends CallPluginPlatform {
@@ -68,6 +69,34 @@ class MethodChannelCallPlugin extends CallPluginPlatform {
     } catch (e) {
       log(e.toString());
       return false;
+    }
+  }
+
+  @override
+  Future<String?> getContactIdByPhone(String phone) async {
+    try {
+      final result = await methodChannel.invokeMethod<String?>(
+        'getContactIdByPhone',
+        {'phone': phone},
+      );
+      return result;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Future<ContactModel?> getContactById(String id) async {
+    try {
+      final result = await methodChannel.invokeMethod<Map>('getContactById', {
+        'id': id,
+      });
+      if (result == null) return null;
+      return ContactModel.fromJson(Map<String, dynamic>.from(result));
+    } catch (e) {
+      log(e.toString());
+      return null;
     }
   }
 }

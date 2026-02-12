@@ -1,8 +1,10 @@
 package com.example.call_plugin
 
 import android.content.Context
+import com.example.call_plugin.datasource.ContactDataSource
 import com.example.call_plugin.model.CallLogFilter
 import com.example.call_plugin.repository.CallLogRepository
+import com.example.call_plugin.repository.ContactRepository
 import com.example.call_plugin.repository.SimRepository
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -17,10 +19,15 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var callRepository: CallLogRepository
     private lateinit var simRepository: SimRepository
 
+    private lateinit var contactRepository: ContactRepository
+
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         context = binding.applicationContext
         simRepository = SimRepository(context)
         callRepository = CallLogRepository(context)
+
+        val contactDataSource = ContactDataSource(context.contentResolver)
+        contactRepository = ContactRepository(contactDataSource)
 
         channel = MethodChannel(binding.binaryMessenger, "call_plugin")
         channel.setMethodCallHandler(this)
@@ -32,7 +39,42 @@ class CallPlugin : FlutterPlugin, MethodCallHandler {
             "deleteCallLogById" -> handleDeleteCallLogById(call, result)
             "deleteCallLogByPhone" -> handleDeleteCallLogByPhone(call, result)
             "getSimCards" -> handleGetSimCards(result)
+            "getContactById" -> handleGetContactById(call, result)
+            "getContactIdByPhone" -> handleGetContactIdByPhone(call, result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun handleGetContactIdByPhone(call: MethodCall, result: MethodChannel.Result) {
+        try {
+            val args = call.arguments as? Map<*, *>
+            val phoneNumber = args?.get("phone") as? String
+            if (phoneNumber.isNullOrBlank()) {
+                result.error("CONTACT_ID_ERROR", "phoneNumber cannot be null or empty", null)
+                return
+            }
+            val contactId = contactRepository.getContactIdByPhoneNumber(phoneNumber)
+            result.success(contactId)
+        } catch (e: Exception) {
+            result.error("CONTACT_ID_ERROR", e.message, null)
+        }
+    }
+
+    private fun handleGetContactById(call: MethodCall, result: MethodChannel.Result) {
+        try {
+            val args = call.arguments as? Map<*, *>
+            val contactId = args?.get("id") as? String
+
+            if (contactId.isNullOrEmpty()) {
+                result.error("CONTACT_ERROR", "contactId cannot be null or empty", null)
+                return
+            }
+
+            val contact = contactRepository.getContactById(contactId)
+
+            result.success(contact)
+        } catch (e: Exception) {
+            result.error("CONTACT_ERROR", e.message, null)
         }
     }
 

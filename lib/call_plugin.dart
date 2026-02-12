@@ -1,6 +1,7 @@
 import 'package:call_plugin/models/call_log_params.dart';
 
 import 'call_plugin_platform_interface.dart';
+import 'models/contact_model.dart';
 import 'models/sim_card_model.dart';
 
 class CallPlugin {
@@ -18,5 +19,13 @@ class CallPlugin {
 
   Future<bool> deleteCallLogByPhone(String phoneNumber) {
     return CallPluginPlatform.instance.deleteCallLogByPhone(phoneNumber);
+  }
+
+  static Future<String?> getContactIdByPhone(String phone) {
+    return CallPluginPlatform.instance.getContactIdByPhone(phone);
+  }
+
+  static Future<ContactModel?> getContactById(String id) {
+    return CallPluginPlatform.instance.getContactById(id);
   }
 }
