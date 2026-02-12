@@ -21,11 +21,11 @@ class CallPlugin {
     return CallPluginPlatform.instance.deleteCallLogByPhone(phoneNumber);
   }
 
-  static Future<String?> getContactIdByPhone(String phone) {
+  Future<String?> getContactIdByPhone(String phone) {
     return CallPluginPlatform.instance.getContactIdByPhone(phone);
   }
 
-  static Future<ContactModel?> getContactById(String id) {
+  Future<ContactModel?> getContactById(String id) {
     return CallPluginPlatform.instance.getContactById(id);
   }
 }
