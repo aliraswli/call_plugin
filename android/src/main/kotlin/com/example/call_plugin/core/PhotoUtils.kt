@@ -49,4 +49,19 @@ object PhotoUtils {
             null
         }
     }
+
+
+    fun photoUriToBase64(context: Context, uriString: String?): String? {
+        if (uriString.isNullOrEmpty()) return null
+
+        return try {
+            val uri = Uri.parse(uriString)
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                val bytes = inputStream.readBytes()
+                Base64.encodeToString(bytes, Base64.NO_WRAP)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

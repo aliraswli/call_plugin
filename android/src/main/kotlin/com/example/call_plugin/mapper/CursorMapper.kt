@@ -19,13 +19,16 @@ object CursorMapper {
         cursor?.use {
             while (it.moveToNext()) {
                 if (index >= offset && list.size < limit) {
+                    val photoUri = it.getString(
+                        it.getColumnIndexOrThrow(CallLog.Calls.CACHED_PHOTO_URI)
+                    )
                     val number = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.NUMBER))
-                    val photo = PhotoUtils.getContactPhotoBase64(context, number)
+                    val photoBase64 = PhotoUtils.photoUriToBase64(context, photoUri)
 
                     list.add(
                         CallLogItem(
                             number = number,
-                            photo = photo,
+                            photo = photoBase64,
                             id = it.getString(it.getColumnIndexOrThrow(CallLog.Calls._ID)),
                             name = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME)),
                             type = it.getInt(it.getColumnIndexOrThrow(CallLog.Calls.TYPE)),

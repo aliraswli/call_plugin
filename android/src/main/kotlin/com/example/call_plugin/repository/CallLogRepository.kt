@@ -38,10 +38,12 @@ class CallLogRepository(
                     local = digitsOnly
                     international = "98" + digitsOnly.substring(1)
                 }
+
                 digitsOnly.startsWith("98") -> {
                     international = digitsOnly
                     local = "0" + digitsOnly.substring(2)
                 }
+
                 else -> {
                     local = digitsOnly
                     international = digitsOnly
@@ -51,8 +53,7 @@ class CallLogRepository(
             val plusInternational = "+$international"
 
             val projection = arrayOf(
-                CallLog.Calls._ID,
-                CallLog.Calls.NUMBER
+                CallLog.Calls._ID, CallLog.Calls.NUMBER
             )
 
             val selection = """
@@ -62,19 +63,13 @@ class CallLogRepository(
         """.trimIndent()
 
             val selectionArgs = arrayOf(
-                "%$local%",
-                "%$international%",
-                "%$plusInternational%"
+                "%$local%", "%$international%", "%$plusInternational%"
             )
 
             val idsToDelete = mutableListOf<String>()
 
             val cursor = resolver.query(
-                CallLog.Calls.CONTENT_URI,
-                projection,
-                selection,
-                selectionArgs,
-                null
+                CallLog.Calls.CONTENT_URI, projection, selection, selectionArgs, null
             )
 
             cursor?.use {
@@ -156,8 +151,9 @@ class CallLogRepository(
             selectionParts.add("${CallLog.Calls.DURATION} = 0")
         }
 
-        val selection =
-            if (selectionParts.isNotEmpty()) selectionParts.joinToString(" AND ") else null
+        val selection = if (selectionParts.isNotEmpty()) {
+            selectionParts.joinToString(" AND ")
+        } else null
 
         val args = if (selectionArgs.isNotEmpty()) selectionArgs.toTypedArray() else null
 
