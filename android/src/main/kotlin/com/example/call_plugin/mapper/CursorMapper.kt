@@ -2,9 +2,8 @@ package com.example.call_plugin.mapper
 
 import android.content.Context
 import android.database.Cursor
-import android.net.Uri
 import android.provider.CallLog
-import android.util.Base64
+import com.example.call_plugin.core.PhotoUtils
 import com.example.call_plugin.model.CallLogItem
 
 object CursorMapper {
@@ -20,16 +19,15 @@ object CursorMapper {
         cursor?.use {
             while (it.moveToNext()) {
                 if (index >= offset && list.size < limit) {
-                    val photoUriString =
-                        it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_PHOTO_URI))
-                    val base64Photo = photoUriToBase64(context, photoUriString)
+                    val number = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.NUMBER))
+                    val photo = PhotoUtils.getContactPhotoBase64(context, number)
 
                     list.add(
                         CallLogItem(
+                            number = number,
+                            photo = photo,
                             id = it.getString(it.getColumnIndexOrThrow(CallLog.Calls._ID)),
-                            number = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.NUMBER)),
                             name = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME)),
-                            photo = base64Photo,
                             type = it.getInt(it.getColumnIndexOrThrow(CallLog.Calls.TYPE)),
                             date = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DATE)),
                             duration = it.getLong(it.getColumnIndexOrThrow(CallLog.Calls.DURATION)),
@@ -42,19 +40,4 @@ object CursorMapper {
         }
         return list
     }
-
-    fun photoUriToBase64(context: Context, uriString: String?): String? {
-        if (uriString.isNullOrEmpty()) return null
-
-        return try {
-            val uri = Uri.parse(uriString)
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                val bytes = inputStream.readBytes()
-                Base64.encodeToString(bytes, Base64.NO_WRAP)
-            }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
 }
